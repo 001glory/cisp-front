@@ -13,7 +13,7 @@
           <el-input readonly v-model="msg.username"></el-input>
         </el-form-item>
         <el-form-item label="用户状态">
-          <el-switch v-model="msg.user_state" active-value="AVAILABLE" inactive-value="DISABLE"></el-switch>
+          <el-switch v-model="msg.user_state" active-value="AVAILABLE" inactive-value="DISABLE" disabled></el-switch>
         </el-form-item>
         <el-form-item label="注册时间">
           <el-input readonly v-model="msg.create_time"></el-input>
@@ -33,7 +33,7 @@
       >
         <el-table-column prop="serverName" label="服务项">
           <template slot-scope="scope">
-           <span>{{scope.row.serverName}}}</span>
+           <span>{{scope.row.serverName}}</span>
          </template></el-table-column>
         <el-table-column prop="userSy" label="用户收益">
           <template slot-scope="scope">

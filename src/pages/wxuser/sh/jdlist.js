@@ -35,12 +35,12 @@ let list = {
           message: '请填写驳回信息'
         })
       } else {
-        that.yzy.post('wx/user/info/unpass', {
-          id: that.sid,
-          msg: that.bmsg
-        }, function (res) {
+        let param = new URLSearchParams()
+        param.append("id",that.sid)
+        param.append("msg",that.bmsg)
+        that.axios.post('/api/wx/user/unpass', param).then((res)=>{
           that.centerDialogVisible = false
-          if (res.code == 1) {
+          if (res.data.success) {
             that.$message({
               type: 'success',
               message: '操作成功'
@@ -56,10 +56,10 @@ let list = {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        that.yzy.post('wx/user/info/pass', {
-          id: sid
-        }, function (res) {
-          if (res.code == 1) {
+        let param = new URLSearchParams()
+        param.append("id",sid)
+        that.axios.post('/api/wx/user/pass', param).then((res)=> {
+          if (res.data.success) {
             that.$message({
               type: 'success',
               message: '操作成功'

@@ -208,7 +208,7 @@ const nav = {
         label: "代理总览",
         path: "/agentview",
         icon: "ios-podium-outline"
-      }]
+      },]
     },
     {
       label: "接单员管理",

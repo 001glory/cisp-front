@@ -131,8 +131,11 @@ let list = {
     },
     searchInput(index) {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
+      console.log(index)
     },
     search() {
+      this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
+      console.log(index)
       that.getList()
     },
     clear() {

@@ -18,9 +18,9 @@
     <div style="margin-top:15px">
       <div class="panel-between item-center">
         <el-button-group>
-          <!-- <el-button type="danger" plain icon="el-icon-delete"></el-button> -->
-          <!-- <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
-          <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>-->
+          <el-button type="danger" plain icon="el-icon-delete"></el-button>
+          <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
+          <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>
         </el-button-group>
         <el-select
           v-model="query.pageSize"
@@ -71,12 +71,12 @@
           <div>{{scope.row.phone ? scope.row.phone:'未注册'}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="dphone" label="短号">
-        <template slot-scope="scope">
-          <div>{{scope.row.dphone ? scope.row.dphone:'未填写'}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="信息" label="信息">
+      <!--<el-table-column prop="dphone" label="短号">-->
+        <!--<template slot-scope="scope">-->
+          <!--<div>{{scope.row.dphone ? scope.row.dphone:'未填写'}}</div>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <el-table-column prop="信息" label="微信地址信息">
         <template slot-scope="scope">
           <div>{{scope.row.nickName ? scope.row.province + ' ' +scope.row.city:'未授权'}}</div>
         </template>

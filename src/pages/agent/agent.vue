@@ -22,19 +22,19 @@
           <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
           <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>
         </el-button-group>
-        <el-select
-          v-model="query.pageSize"
-          placeholder="请选择"
-          style="width:150px"
-          @change="handleSizeChange"
-        >
-          <el-option
-            v-for="item in pageSize"
-            :key="item.label"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        <!--<el-select-->
+          <!--v-model="query.pageSize"-->
+          <!--placeholder="请选择"-->
+          <!--style="width:150px"-->
+          <!--@change="handleSizeChange"-->
+        <!--&gt;-->
+          <!--<el-option-->
+            <!--v-for="item in pageSize"-->
+            <!--:key="item.label"-->
+            <!--:label="item.label"-->
+            <!--:value="item.value"-->
+          <!--&gt;</el-option>-->
+        <!--</el-select>-->
       </div>
     </div>
 
@@ -49,7 +49,7 @@
       @filter-change="filterChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="pkId" label="ID"></el-table-column>
+      <el-table-column prop="pk_id" label="ID"></el-table-column>
       <el-table-column prop="username" label="用户名"></el-table-column>
       <el-table-column prop="phone" label="手机号"></el-table-column>
       <el-table-column prop="name" label="代理地"></el-table-column>
@@ -57,7 +57,7 @@
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.dtype == 2?'success':'warning'"
-          >{{scope.row.dtype == 2?'校园代理':'城市代理'}}</el-tag>
+          >{{scope.row.dtype == 2?'校园代理':'管理员'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -68,13 +68,13 @@
       >
         <template slot-scope="scope">
           <el-tag
-            :type="scope.row.userState == 'AVAILABLE' ? 'success':'warning'"
-          >{{scope.row.userState == 'AVAILABLE' ? '可用':'禁用'}}</el-tag>
+            :type="scope.row.user_state == 'AVAILABLE' ? 'success':'warning'"
+          >{{scope.row.user_state == 'AVAILABLE' ? '可用':'禁用'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="seevisable = true,tempUid = scope.row.pkId">查看</el-button>
+          <el-button type="text" @click="seevisable = true,tempUid = scope.row.pk_id">查看</el-button>
           <el-button type="text" @click="seevisable2 = true,tempAid = scope.row.ad">运营数据</el-button>
         </template>
       </el-table-column>

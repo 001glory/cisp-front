@@ -48,6 +48,7 @@ let main = {
       let param = new URLSearchParams()
       param.append("uid",sessionStorage.getItem("uid"))
       if(sessionStorage.getItem("uid") != null){
+        console.log("成功！")
         this.axios.post('/api/server/getList',param).then((res)=>{
           if(res.data.success){
             for (let i in res.data.data) {

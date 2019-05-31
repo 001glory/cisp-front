@@ -11,7 +11,7 @@
           class="upload-demo"
           name="files"
           ref="upload"
-          action="http://localhost:8080/upload/singlefile"
+          action="http://localhost:81/cisp/upload/file"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :on-success="handleSuccess"

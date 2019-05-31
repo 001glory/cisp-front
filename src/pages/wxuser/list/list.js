@@ -13,7 +13,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '昵称', '手机号', '短号', '性别'], ['id', 'nick_name', 'phone', 'dphone', 'gender'])
+      searchList: this.yzy.initFilterSearch(['ID', '昵称', '手机号',  '性别'], ['id', 'nickName', 'phone',  'gender'])
     }
   },
   mounted() {
@@ -86,15 +86,22 @@ let list = {
       this.getList()
     },
     changeUserState(state) {
-
       if (state == 'disable') {
         this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
           confirmButtonText: '继续',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.update('user/state/' + state, {
-            ids: that.filterIds().toString()
+          let param = new URLSearchParams()
+          param.append("id",that.filterIds().toString())
+          console.log(that.filterIds().toString())
+          that.axios.post('user/state',param).then((res)=> {
+            if (res.data.success){
+              that.$message({
+                type: 'info',
+                message: '禁用成功！'
+              });
+            }
           })
         }).catch(() => {
           that.$message({
@@ -133,17 +140,21 @@ let list = {
     },
     searchInput(index) {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
+      console.log(index)
     },
     search() {
       that.getList()
     },
     clear() {
       for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
+        // if (this.wheres[i].label != 'userState') {
+        //   this.wheres[i].value = ''
+        // }
+        console.log("dasdad")
+        this.wheres[i].value = ''
       }
-      that.getList()
+      console.log(wheres.length)
+      // that.getList()
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;

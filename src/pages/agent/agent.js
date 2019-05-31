@@ -27,25 +27,14 @@ let list = {
   },
   methods: {
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-      if (sq != '') {
-        this.query.wheres = sq.substring(0, sq.length - 4)
-      } else {
-        this.query.wheres = ''
-      }
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
-      this.axios.post('/api/user/get', param).then((res)=>{
+      this.axios.post('/api/user/get/info').then((res)=>{
         if (res.data.success) {
 
-          that.tableData = res.data.data.content
-          that.total = res.data.data.totalElements
+          that.tableData = res.data.data
+          that.total = res.data.data.length
         } else {
           that.$message({
             type: 'error',
@@ -90,26 +79,25 @@ let list = {
       this.getList()
     },
     changeUserState(state) {
-
-      if (state == 'disable') {
-        this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
-          confirmButtonText: '继续',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          that.update('user/state/' + state, {
-            ids: that.filterIds().toString()
-          })
-        }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '已取消删除'
+      if (sessionStorage.getItem("dtype") == 1) {
+        let param = new URLSearchParams()
+        param.append("pkId",that.filterIds().toString())
+        if (state == 'disable') {
+          this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            that.update('/api/user/update/state/' + state, param)
+          }).catch(() => {
+            that.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
           });
-        });
-      } else {
-        that.update('user/state/' + state, {
-          ids: that.filterIds().toString()
-        })
+        } else {
+          that.update('/api/user/update/state/' + state, param)
+        }
       }
     },
     filterIds() {
@@ -120,17 +108,17 @@ let list = {
       return arr
     },
     update(url, data) {
-      this.yzy.post(url, data, function (res) {
-        if (res.code == 1) {
+      this.axios.post(url, data).then((res)=>{
+        if (res.data.success) {
           that.$message({
             type: 'success',
-            message: res.msg
+            message: "操作成功！"
           })
           that.getList()
         } else {
           that.$message({
             type: 'error',
-            message: res.msg
+            message: "操作失败！"
           })
         }
       })
