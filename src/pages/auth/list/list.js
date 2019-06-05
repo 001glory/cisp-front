@@ -13,7 +13,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '名称', 'url', '类目ID'], ['id', 'auth_name', 'auth_url', 'cate_id'])
+      searchList: this.yzy.initFilterSearch(['名称'], ['auth_name'])
     }
   },
   mounted() {
@@ -64,17 +64,25 @@ let list = {
       })
     },
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
-      this.query.wheres = sq + ' is_delete=0 '
       this.axios.post('/api/auth/getList', param).then((res)=> {
+        if (res.data.success) {
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: "服务器异常，请稍后再试！"
+          })
+        }
+      })
+    },
+    getList1(param) {
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/auth/like', param).then((res)=> {
         if (res.data.success) {
           that.tableData = res.data.data.content
           that.total = res.data.data.totalElements
@@ -99,14 +107,16 @@ let list = {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("authName",this.searchList[0].value)
+        that.getList1(param)
+      } else {
+        that.getList()
+      }
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList = this.yzy.initFilterSearch(['名称'], ['auth_name'])
       that.getList()
     },
     handleSelectionChange(val) {

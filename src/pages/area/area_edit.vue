@@ -9,7 +9,7 @@
       <el-input v-model="formData.atype" placeholder="1城市 2校园"></el-input>
     </el-form-item>-->
     <el-form-item label="名称">
-      <el-input v-model="formData.name" placeholder="填城市名称 或 校园名称"></el-input>
+      <el-input v-model="formData.name" placeholder="校园名称"></el-input>
     </el-form-item>
     <!-- <el-form-item label="代理抽点">
       <el-input v-model="formData.agent_get" placeholder="填写小于1的数值"></el-input>

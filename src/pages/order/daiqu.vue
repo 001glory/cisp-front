@@ -28,7 +28,8 @@
         </div>
         <el-button-group>
           <!-- <el-button type="danger" plain icon="el-icon-delete"></el-button> -->
-          <!-- <el-button type="success" plain @click="changeUserState('available')">接单</el-button>-->
+          <el-button type="danger" plain icon="el-icon-delete" @click="del()"></el-button>
+           <!--<el-button type="success" plain @click="changeUserState('available')">接单</el-button>-->
         </el-button-group>
         <el-select
           v-model="query.pageSize"
@@ -60,7 +61,6 @@
       <el-table-column prop="order_num" label="订单编号"></el-table-column>
       <el-table-column prop="nick_name" label="下单用户"></el-table-column>
       <el-table-column prop="phone" label="手机号"></el-table-column>
-      <el-table-column prop="dphone" label="短号"></el-table-column>
       <el-table-column prop="des" label="信息"></el-table-column>
       <el-table-column prop="mu" label="目的地"></el-table-column>
       <el-table-column prop="total_fee" label="已支付"></el-table-column>
@@ -73,7 +73,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="jdclick(scope.row)" v-if="scope.row.state == 1">接单</el-button>
+          <!--<el-button type="text" @click="jdclick(scope.row)" v-if="scope.row.state == 1">接单</el-button>-->
           <el-button type="text" @click="wcclick(scope.row.id)" v-if="scope.row.state == 2">完成</el-button>
         </template>
       </el-table-column>

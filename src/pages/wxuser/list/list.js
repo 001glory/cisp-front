@@ -29,15 +29,25 @@ let list = {
         }
       }
       this.query.wheres += ' phone not null '
-      // if (sq != '') {
-      //   this.query.wheres = sq.substring(0, sq.length - 4)
-      // } else {
-      //   this.query.wheres = ''
-      // }
+
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
       this.axios.post('/api/wx/user/get', param).then((res)=> {
+        if (res.data.success) {
+
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
+    getList1(param) {
+      this.axios.post('/api/wx/user/get2', param).then((res)=> {
         if (res.data.success) {
 
           that.tableData = res.data.data.content
@@ -86,75 +96,87 @@ let list = {
       this.getList()
     },
     changeUserState(state) {
-      if (state == 'disable') {
-        this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
-          confirmButtonText: '继续',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let param = new URLSearchParams()
-          param.append("id",that.filterIds().toString())
-          console.log(that.filterIds().toString())
-          that.axios.post('user/state',param).then((res)=> {
-            if (res.data.success){
-              that.$message({
-                type: 'info',
-                message: '禁用成功！'
-              });
-            }
-          })
-        }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      } else {
-        that.update('user/state/' + state, {
-          ids: that.filterIds().toString()
+      if (this.multipleSelection.length == 0) {
+        that.$message({
+          type: 'warning',
+          message: '您还没有选择任何一项'
         })
+      } else {
+        let param = new URLSearchParams()
+        param.append("id",that.filterIds().toString())
+        if (state == 'disable') {
+          this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+
+            console.log(that.filterIds().toString())
+            that.update("/api/wx/user/state/"+state,param)
+          }).catch(() => {
+            that.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        } else {
+          that.update('/api/wx/user/state/' + state, param)
+        }
       }
     },
     filterIds() {
       let arr = []
       for (let i in this.multipleSelection) {
-        arr.push(this.multipleSelection[i].pk_id)
+        arr.push(this.multipleSelection[i].id)
       }
       return arr
     },
     update(url, data) {
-      this.yzy.post(url, data, function (res) {
-        if (res.code == 1) {
+      this.axios.post(url, data).then((res)=> {
+        if (res.data.success) {
           that.$message({
             type: 'success',
-            message: res.msg
+            message: "操作成功！"
           })
           that.getList()
         } else {
           that.$message({
             type: 'error',
-            message: res.msg
+            message: "操作失败！"
           })
         }
       })
     },
     searchInput(index) {
-      this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
-      console.log(index)
+      // this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
+      // for (let i in this.wheres) {
+      //
+      //   // console.log(this.wheres[i])
+      // }
+      // console.log(this.searchList[index])
+      // console.log(this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("id",this.searchList[0].value)
+      }
+      if (this.searchList[1].value != '') {
+        param.append("nickName",this.searchList[1].value)
+      }
+      if (this.searchList[2].value != '') {
+        param.append("phone",this.searchList[2].value)
+      }
+      if (this.searchList[3].value != '') {
+        param.append("gender", this.searchList[3].value)
+      }
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      that.getList1(param)
     },
     clear() {
-      for (let i in this.wheres) {
-        // if (this.wheres[i].label != 'userState') {
-        //   this.wheres[i].value = ''
-        // }
-        console.log("dasdad")
-        this.wheres[i].value = ''
-      }
-      console.log(wheres.length)
-      // that.getList()
+      this.searchList=this.yzy.initFilterSearch(['ID', '昵称', '手机号',  '性别'], ['id', 'nickName', 'phone',  'gender'])
+      that.getList()
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;

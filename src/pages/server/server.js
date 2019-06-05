@@ -15,7 +15,7 @@ let list = {
         serverName: '',
         dlSy: '',
         userSy: '',
-        pSy: '',
+        psy: '',
         isShow: 1,
         des: '',
         tags: ''
@@ -26,7 +26,7 @@ let list = {
         serverName: '',
         dlSy: '',
         userSy: '',
-        pSy: '',
+        psy: '',
         isShow: 1,
         des: '',
         tags: ''
@@ -36,13 +36,32 @@ let list = {
       }, {
         label: '打印服务'
       }, {
-        label: '校园跑腿'
+        label: '二手服务'
       }, {
-        label: '上门维修'
+        label: '上门服务'
       }, {
-        label: '代替服务'
+        label: '解忧服务 '
       }, {
         label: '其他帮助'
+      }, ],
+      icons: [{
+        label: '快递代取',
+        value:'../../img/s2.png'
+      }, {
+        label: '打印服务',
+        value:'../../img/s3.png'
+      }, {
+        label: '二手服务',
+        value:'../../img/s1.png'
+      }, {
+        label: '上门服务',
+        value:'../../img/s4.png'
+      }, {
+        label: '解忧服务 ',
+        value:'../../img/s5.png'
+      }, {
+        label: '其他帮助',
+        value:'../../img/s6.png'
       }, ],
       loading: false
     }
@@ -77,16 +96,15 @@ let list = {
       this.jdr = [global.tempJd.avatar_url, global.tempJd.name, global.tempJd.openid, global.tempJd.id]
     },
     getMsg() {
-      this.yzy.post('server/get/id', {
-        id: this.$route.query.id,
-      }, function (res) {
-        if (res.code == 1) {
-          that.formData = res.data[0]
-          if (res.data[0].server_name == '快递代取' || res.data[0].server_name == '打印服务') {
-            that.price = res.data[0].price_gui.split(',')
+      let param = new URLSearchParams()
+      param.append("id",this.$route.query.id,)
+      this.axios.post('/api/server/get/detail/id', param).then((res)=> {
+        if (res.data.success) {
+          that.formData = res.data.data
+          if (res.data.data.serverName == '快递代取' || res.data.data.serverName == '打印服务') {
+            that.price = res.data[0].priceGui.split(',')
           }
-          that.jdr = res.data[0].jdr ? res.data[0].jdr.split(',') : []
-          that.dynamicTags = res.data[0].tags.split(',') || []
+          // that.dynamicTags = res.data[0].tags.split(',') || []
         }
       })
     },
@@ -108,10 +126,11 @@ let list = {
         param.append("priceGui",this.formData.priceGui)
         param.append("userSy",this.formData.userSy)
         param.append("dlSy",this.formData.dlSy)
-        param.append("pSy",this.formData.pSy)
+        param.append("pSy",this.formData.psy)
         param.append("des",this.formData.des)
         param.append("isShow",this.formData.isShow)
         param.append("jdr",this.formData.jdr)
+        param.append("icon",this.formData.icon)
         param.append("tags",this.formData.tags)
         let url = 'add'
         if (this.$route.query.id) {
@@ -137,6 +156,7 @@ let list = {
           }
         })
       } else {
+        that.loading = false
         that.$message.error('所有项都必填')
       }
 

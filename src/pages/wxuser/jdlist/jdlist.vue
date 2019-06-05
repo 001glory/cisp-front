@@ -18,9 +18,8 @@
     <div style="margin-top:15px">
       <div class="panel-between item-center">
         <el-button-group>
-          <el-button type="danger" plain icon="el-icon-delete"></el-button>
-          <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
-          <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>
+          <el-button type="success" plain @click="changeUserState('available')">启用接单员</el-button>
+          <el-button type="warning" plain @click="changeUserState('disable')">禁用接单员</el-button>
         </el-button-group>
         <el-select
           v-model="query.pageSize"
@@ -49,6 +48,11 @@
       @filter-change="filterChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="id" label="ID" width="55">
+        <template slot-scope="scope">
+          <div>{{scope.row.id }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="头像" width="80">
         <template slot-scope="scope">
           <div>
@@ -79,6 +83,16 @@
       <el-table-column prop="信息" label="微信地址信息">
         <template slot-scope="scope">
           <div>{{scope.row.nickName ? scope.row.province + ' ' +scope.row.city:'未授权'}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="auth"
+        label="状态"
+      >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.auth == '1' ? 'success':'warning'"
+          >{{scope.row.auth == '1' ? '可用':'禁用'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作">

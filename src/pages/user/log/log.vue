@@ -18,6 +18,7 @@
     <div style="margin-top:15px">
       <div class="panel-between item-center">
         <el-button-group>
+          <el-button type="danger" plain icon="el-icon-delete" @click="del()"></el-button>
           <!-- <el-button type="danger" plain icon="el-icon-delete" @click="del()"></el-button>
           <el-button type="success" plain @click="updateState('onShow')">显示</el-button>
           <el-button type="warning" plain @click="updateState('unShow')">关闭</el-button>-->
@@ -47,6 +48,7 @@
       style="width: 100%;margin-top:15px"
       @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="uid" label="操作人ID"></el-table-column>
       <el-table-column prop="createTime" label="操作时间"></el-table-column>
       <el-table-column prop="des" label="描述"></el-table-column>

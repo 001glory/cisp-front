@@ -18,7 +18,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '昵称', '手机号', '短号'], ['id', 'nick_name', 'phone', 'dphone'])
+      searchList: this.yzy.initFilterSearch(['ID', '昵称', '手机号'], ['id', 'nick_name', 'phone'])
     }
   },
   mounted() {
@@ -27,13 +27,6 @@ let list = {
   },
   methods: {
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-      this.query.wheres = sq + this.query.wheres
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
@@ -41,6 +34,25 @@ let list = {
         this.query.wheres += ' and userinfo.a_id='+sessionStorage.getItem('a_id')
       }
       this.axios.post('/api/wx/get/com', param).then((res)=> {
+        if (res.data.success) {
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
+    getList1(param) {
+      // let param = new URLSearchParams()
+      // param.append("page",this.query.pageIndex-1)
+      // param.append("size",this.query.pageSize)
+      // if(sessionStorage.getItem('dtype') == 2){
+      //   this.query.wheres += ' and userinfo.a_id='+sessionStorage.getItem('a_id')
+      // }
+      this.axios.post('/api/wx/get/com1', param).then((res)=> {
         if (res.data.success) {
           that.tableData = res.data.data.content
           that.total = res.data.data.totalElements
@@ -88,63 +100,75 @@ let list = {
       this.getList()
     },
     changeUserState(state) {
-
-      if (state == 'disable') {
-        this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
-          confirmButtonText: '继续',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          that.update('user/state/' + state, {
-            ids: that.filterIds().toString()
-          })
-        }).catch(() => {
-          that.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      } else {
-        that.update('user/state/' + state, {
-          ids: that.filterIds().toString()
+      if (this.multipleSelection.length == 0) {
+        that.$message({
+          type: 'warning',
+          message: '您还没有选择任何一项'
         })
+      } else {
+        let param = new URLSearchParams()
+        param.append("id",that.filterIds().toString())
+        if (state == 'disable') {
+          this.$confirm('此操作将使用户被迫下线, 是否继续?', '提示', {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            that.update('/api/wx/jdUser/state/' + state, param)
+          }).catch(() => {
+            that.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        } else {
+          that.update('/api/wx/jdUser/state/' + state, param)
+        }
       }
     },
     filterIds() {
       let arr = []
       for (let i in this.multipleSelection) {
-        arr.push(this.multipleSelection[i].pk_id)
+        arr.push(this.multipleSelection[i].id)
       }
       return arr
     },
     update(url, data) {
-      this.yzy.post(url, data, function (res) {
-        if (res.code == 1) {
+      this.axios.post(url, data).then((res)=>{
+        if (res.data.success) {
           that.$message({
             type: 'success',
-            message: res.msg
+            message: "操作成功！"
           })
           that.getList()
         } else {
           that.$message({
             type: 'error',
-            message: res.msg
+            message: "操作失败！"
           })
         }
       })
     },
     searchInput(index) {
-      this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
+      // this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("id",this.searchList[0].value)
+      }
+      if (this.searchList[1].value != '') {
+        param.append("nickName",this.searchList[1].value)
+      }
+      if (this.searchList[2].value != '') {
+        param.append("phone",this.searchList[2].value)
+      }
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      that.getList1(param)
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList=this.yzy.initFilterSearch(['ID', '昵称', '手机号'], ['id', 'nick_name', 'phone'])
       that.getList()
     },
     handleSelectionChange(val) {

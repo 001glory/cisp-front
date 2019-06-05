@@ -1,6 +1,5 @@
 let G2 = require('@antv/g2');
 let chart ;
-let chart2 ;
 let that;
 let list = {
   data() {
@@ -25,15 +24,9 @@ let list = {
       height: 500,
       padding: [100, 20, 30, 45] // 上右下左
     });
-    // chart2 = new G2.Chart({
-    //   container: 'mountNode',
-    //   forceFit: true,
-    //   height:500,
-    //   padding: [100, 20, 30, 45]
-    // });
+
     this.getAnalysisData()
     this.sbchange()
-    // this.sbchange2()
   },
   methods: {
     sbchange() {
@@ -45,15 +38,6 @@ let list = {
         this.getorderStateData(this.sbdate.getFullYear() + '-' + m)
       }
     },
-    sbchange2() {
-      if (this.sbtype2 == 'year') {
-        this.getorderTypeData(this.sbdate2.getFullYear())
-      } else {
-        let month = this.sbdate2.getMonth() + 1
-        let m = month < 10 ? "0" + month : month
-        this.getorderTypeData(this.sbdate2.getFullYear() + '-' + m)
-      }
-    },
     getorderStateData(date) {
       let param = new URLSearchParams()
       param.append("createTime",date)
@@ -61,13 +45,6 @@ let list = {
       this.axios.post('/api/index/get/order/state',param).then((res)=>{
         if (res.data.success) {
           that.orderNodeData(res.data.data)
-        }
-      })
-    },
-    getorderTypeData(date){
-      this.yzy.post('anlysis/get/order/type', { sbtype: this.sbtype2, sbdate: date }, function (res) {
-        if (res.code == 1) {
-          that.orderNodeData2(res.data)
         }
       })
     },
@@ -127,35 +104,9 @@ let list = {
         color: '#0099CC'
       },
       ]
-      this.newData2 = [{
-        label: '退款总额(RMB)',
-        value: this.msg.refund,
-        icon: 'logo-yen',
-        color: '#0099CC'
-      },
-      {
-        label: '今日退款额(RMB)',
-        value: this.msg.refundDaily,
-        icon: 'logo-yen',
-        color: '#0099CC'
-      },
-      {
-        label: '月度退款额(RMB)',
-        value: this.msg.refundMonth,
-        icon: 'logo-yen',
-        color: '#0099CC'
-      },
-      {
-        label: '年度退款额(RMB)',
-        value: this.msg.refundYear,
-        icon: 'logo-yen',
-        color: '#0099CC'
-      },
-      ]
-
       this.orderData = [{
         label: '今日用户数',
-        value: this.msg.wxuserTotalDaily,
+        value: this.msg.dailyUser,
         icon: 'ios-calendar',
         color: '#0099CC'
       },
@@ -180,53 +131,6 @@ let list = {
       ]
 
 
-    },
-    orderNodeData2(data) {
-      chart2.source(data);
-      chart2.tooltip({
-        follow: false,
-        crosshairs: 'y',
-        htmlContent: function htmlContent(title, items) {
-          let alias = {
-            '打印服务': '打印服务',
-            '快递代取': '快递代取',
-            '校园跑腿': '校园跑腿',
-            '上门维修': '上门维修',
-            '代替服务': '代替服务',
-            '其他帮助': '其他帮助'
-          };
-          let html = '<div class="custom-tooltip">';
-          for (var i = 0; i < items.length; i++) {
-            var domHead = '<div class="custom-tooltip-item" style="border-left-color:' + items[i].color + '">';
-            var domName = '<div class="custom-tooltip-item-name">' + alias[items[i].name] + '</div>';
-            var domValue = '<div class="custom-tooltip-item-value">' + items[i].value + '</div>';
-            var domTail = '</div>';
-            html += domHead + domName + domValue + domTail;
-          }
-          return html + '</div>';
-        }
-      });
-      chart2.axis('time', {
-        label: {
-          textStyle: {
-            fill: '#aaaaaa'
-          }
-        }
-      });
-      chart2.axis('total', {
-        label: {
-          textStyle: {
-            fill: '#aaaaaa'
-          }
-        }
-      });
-      chart2.legend(false);
-      chart2.line().position('time*total').color('title');
-      chart2.render();
-      chart2.showTooltip({
-        x: 882 - 20,
-        y: 100
-      });
     },
     orderNodeData(data) {
       

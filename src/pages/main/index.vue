@@ -13,6 +13,9 @@
           <el-menu v-if="dtype == 1" class="el-menu-demo" mode="horizontal" :default-active="defaultMeun" @select="selectTopNav">
             <el-menu-item v-for="(item,index) in topNav" :key="index" :index="item.path">{{item.label}}</el-menu-item>
           </el-menu>
+          <el-menu v-if="dtype == 2" class="el-menu-demo" mode="horizontal" :default-active="defaultMeun" @select="selectTopNav">
+            <el-menu-item v-for="(item,index) in topNav1" :key="index" :index="item.path">{{item.label}}</el-menu-item>
+          </el-menu>
         </div>
         <div class="w-250 text-right">
           <el-dropdown trigger="click">
@@ -31,6 +34,9 @@
               </el-dropdown-item>
               <el-dropdown-item>
                 <div class="dropdown-item" @click="navTo('/updatepwd')">修改密码</div>
+              </el-dropdown-item>
+              <el-dropdown-item v-if="dtype==1">
+                <div class="dropdown-item" @click="navTo('/wallet')">我的账户</div>
               </el-dropdown-item>
               <el-dropdown-item>
                 <div class="dropdown-item fo-danger" @click="logout()">退出登录</div>

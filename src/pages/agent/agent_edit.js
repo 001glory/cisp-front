@@ -37,20 +37,11 @@ let list = {
     onSubmit() {
       this.loading = true
 
-      // let formData = {
-      //   username: this.formData.username,
-      //   password: this.yzy.encrypt(this.formData.password),
-      //   checkPwd: this.yzy.encrypt(this.formData.checkPwd),
-      //   a_id: this.formData.a_id,
-      //   dtype: this.formData.dtype,
-      //   phone: this.formData.phone,
-      //   deadline: this.formData.deadline
-      // }
-      if (this.formData.password.length>=8 && this.formData.password ===this.formData.checkPwd){
+      if (this.formData.username.length>=6 && this.formData.password ===this.formData.checkPwd){
         let param = new URLSearchParams()
         param.append("username",this.formData.username)
-        param.append("pwd",this.formData.password)
-        param.append("checkPwd",this.formData.checkPwd)
+        // param.append("pwd",this.formData.password)
+        // param.append("checkPwd",this.formData.checkPwd)
         param.append("aid",this.formData.a_id)
         param.append("dtype",this.formData.dtype)
         param.append("phone",this.formData.phone)
@@ -68,7 +59,7 @@ let list = {
         })
       } else {
         that.loading = false
-        that.$message.error("密码不够8位或两次密码不相符！")
+        that.$message.error("用户名至少6个字符！")
         that.formData = that.formData2
       }
     }

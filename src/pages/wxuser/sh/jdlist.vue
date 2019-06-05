@@ -22,19 +22,19 @@
           <!-- <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
           <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>-->
         </el-button-group>
-        <el-select
-          v-model="query.pageSize"
-          placeholder="请选择"
-          style="width:150px"
-          @change="handleSizeChange"
-        >
-          <el-option
-            v-for="item in pageSize"
-            :key="item.label"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        <!--<el-select-->
+          <!--v-model="query.pageSize"-->
+          <!--placeholder="请选择"-->
+          <!--style="width:150px"-->
+          <!--@change="handleSizeChange"-->
+        <!--&gt;-->
+          <!--<el-option-->
+            <!--v-for="item in pageSize"-->
+            <!--:key="item.label"-->
+            <!--:label="item.label"-->
+            <!--:value="item.value"-->
+          <!--&gt;</el-option>-->
+        <!--</el-select>-->
       </div>
     </div>
 
@@ -48,7 +48,12 @@
       @selection-change="handleSelectionChange"
       @filter-change="filterChange"
     >
-      <el-table-column type="selection" width="55"></el-table-column>
+      <!--<el-table-column type="selection" width="55"></el-table-column>-->
+      <el-table-column prop="id" label="ID" width="55">
+        <template slot-scope="scope">
+          <div>{{scope.row.id }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="头像" width="80">
         <template slot-scope="scope">
           <div>

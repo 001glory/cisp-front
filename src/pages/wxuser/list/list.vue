@@ -90,6 +90,16 @@
           <div>{{scope.row.nickName ? scope.row.province + ' ' +scope.row.city:'未授权'}}</div>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="isDelete"
+        label="状态"
+      >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.isDelete == '0' ? 'success':'warning'"
+          >{{scope.row.isDelete == '0' ? '可用':'禁用'}}</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="panel-end">
       <el-pagination

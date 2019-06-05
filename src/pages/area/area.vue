@@ -18,6 +18,7 @@
     <div style="margin-top:15px">
       <div class="panel-between item-center">
         <el-button-group>
+          <el-button type="danger" plain icon="el-icon-delete" @click="del()"></el-button>
           <!-- <el-button type="danger" plain icon="el-icon-delete"></el-button> -->
           <!-- <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
           <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>-->

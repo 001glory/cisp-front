@@ -13,7 +13,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '名称'], ['id', 'cate_name'])
+      searchList: this.yzy.initFilterSearch(['名称'], ['cate_name'])
     }
   },
   mounted() {
@@ -64,18 +64,26 @@ let list = {
       })
     },
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
-      this.query.wheres = sq + ' is_delete=0 '
       this.axios.post('/api/cate/get', param).then((res)=>{
+        if (res.data.success) {
+
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
+    getList1(param) {
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/cate/like', param).then((res)=>{
         if (res.data.success) {
 
           that.tableData = res.data.data.content
@@ -133,14 +141,16 @@ let list = {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("cateName",this.searchList[0].value)
+        that.getList1(param)
+      } else {
+        that.getList()
+      }
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList = this.yzy.initFilterSearch(['名称'], ['cate_name'])
       that.getList()
     },
     handleSelectionChange(val) {

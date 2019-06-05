@@ -13,7 +13,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '名称'], ['id', 'roleName'])
+      searchList: this.yzy.initFilterSearch([ '名称'], [ 'roleName'])
     }
   },
   mounted() {
@@ -64,16 +64,25 @@ let list = {
       })
     },
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
       this.axios.post('/api/role/get', param).then((res)=>{
+        if (res.data.success) {
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: res.data.message
+          })
+        }
+      })
+    },
+    getList1(param) {
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/role/like', param).then((res)=>{
         if (res.data.success) {
           that.tableData = res.data.data.content
           that.total = res.data.data.totalElements
@@ -124,14 +133,16 @@ let list = {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
-    },
-    clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
+        let param = new URLSearchParams()
+        if (this.searchList[0].value != ''){
+          param.append("name",this.searchList[0].value)
+          that.getList1(param)
+        } else {
+          that.getList()
         }
-      }
+        },
+    clear() {
+      this.searchList = this.yzy.initFilterSearch([ '名称'], [ 'roleName'])
       that.getList()
     },
     handleSelectionChange(val) {

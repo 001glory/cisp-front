@@ -14,7 +14,7 @@ let list = {
       page:0,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '公司名称','区域ID'], ['id', 'company','aid'])
+      searchList: this.yzy.initFilterSearch(['序号', '公司名称'], ['sort', 'company'])
     }
   },
   mounted() {
@@ -65,19 +65,27 @@ let list = {
       })
     },
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-
-      // this.query.wheres = sq + ' is_delete=0 '
       let param = new URLSearchParams()
       this.page =this.query.pageIndex-1
       param.append("page",this.page)
       param.append("size",this.query.pageSize)
       this.axios.post('/api/calousels/getAll', param).then((res)=>{
+        if (res.data.success) {
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: res.data.message
+          })
+        }
+      })
+    },
+    getList1(param) {
+      this.page =this.query.pageIndex-1
+      param.append("page",this.page)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/calousels/like', param).then((res)=>{
         if (res.data.success) {
           that.tableData = res.data.data.content
           that.total = res.data.data.totalElements
@@ -129,14 +137,19 @@ let list = {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("sort",this.searchList[0].value)
+        that.getList1(param)
+      }else if (this.searchList[1].value != '') {
+        param.append("company",this.searchList[1].value)
+        that.getList1(param)
+      }else {
+       that.getList()
+      }
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList = this.yzy.initFilterSearch(['序号', '公司名称'], ['sort', 'company'])
       that.getList()
     },
     handleSelectionChange(val) {

@@ -20,7 +20,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '昵称', '手机号', '短号'], ['id', 'nick_name', 'phone', 'dphone'])
+      searchList: this.yzy.initFilterSearch(['ID', '姓名'], ['id', 'nick_name'])
     }
   },
   mounted() {
@@ -72,19 +72,32 @@ let list = {
       });
     },
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-      this.query.wheres = sq + this.query.wheres
-      if(sessionStorage.getItem('dtype') == 2){
-        this.query.wheres += ' and userinfo.a_id='+sessionStorage.getItem('a_id')
-      }
+      // let sq = ''
+      // for (let i in this.wheres) {
+      //   if (this.wheres[i].value && this.wheres[i].value != '') {
+      //     sq += this.wheres[i].value + ' and '
+      //   }
+      // }
+      // this.query.wheres = sq + this.query.wheres
+      // if(sessionStorage.getItem('dtype') == 2){
+      //   this.query.wheres += ' and userinfo.a_id='+sessionStorage.getItem('a_id')
+      // }
       this.axios.post('/api/wx/get/review',null).then((res)=> {
         if (res.data.success) {
 
+          that.tableData = res.data.data
+          that.total = res.data.data.length
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
+    getList1(param) {
+      this.axios.post('/api/wx/get/review1',param).then((res)=> {
+        if (res.data.success) {
           that.tableData = res.data.data
           that.total = res.data.data.length
         } else {
@@ -156,7 +169,7 @@ let list = {
     filterIds() {
       let arr = []
       for (let i in this.multipleSelection) {
-        arr.push(this.multipleSelection[i].pk_id)
+        arr.push(this.multipleSelection[i].id)
       }
       return arr
     },
@@ -177,17 +190,20 @@ let list = {
       })
     },
     searchInput(index) {
-      this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
+      // this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("id",this.searchList[0].value)
+      }
+      if (this.searchList[1].value != '') {
+        param.append("nickName",this.searchList[1].value)
+      }
+      that.getList1(param)
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList=this.yzy.initFilterSearch(['ID', '姓名'], ['id', 'nick_name'])
       that.getList()
     },
     handleSelectionChange(val) {

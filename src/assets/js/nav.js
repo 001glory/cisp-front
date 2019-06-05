@@ -12,6 +12,15 @@ const nav = {
       path: "item2"
     }
   ],
+  topNav1: [{
+    label: "代理管理",
+    path: "daili1"
+  },
+    {
+      label: "广告营销",
+      path: "item3"
+    }
+  ],
   //dtype 1 仅管理管  2 仅城市代理  3仅校园代理  4 全部 -1 城市和校园
   item1: [{
       label: "总览",
@@ -95,22 +104,23 @@ const nav = {
           icon: "ios-list-box-outline"
         }
       ]
-    },
-    {
-      label: "我的账户",
-      sub: [{
-        label: "我的账户",
-        path: "/wallet",
-        icon: "ios-list-box-outline"
-      }]
-    }, {
-      label: "提现记录",
-      sub: [{
-        label: "提现记录",
-        path: "/cash",
-        icon: "ios-list-box-outline"
-      }]
     }
+    // {
+    //   label: "我的账户",
+    //   sub: [{
+    //     label: "我的账户",
+    //     path: "/wallet",
+    //     icon: "ios-list-box-outline"
+    //   }]
+    // }
+    // {
+    //   label: "提现记录",
+    //   sub: [{
+    //     label: "提现记录",
+    //     path: "/cash",
+    //     icon: "ios-list-box-outline"
+    //   }]
+    // }
   ],
   item2: [{
       label: "角色管理",
@@ -209,6 +219,25 @@ const nav = {
         path: "/agentview",
         icon: "ios-podium-outline"
       },]
+    },
+    {
+      label: "微信用户",
+      dtype: 2,
+      sub: [{
+        label: "用户列表",
+        path: "/wxuser_LIST",
+        icon: "ios-podium-outline"
+      }, {
+        label: "接单员列表",
+        path: "/jdlist",
+        icon: "ios-list-box-outline"
+      },
+        {
+          label: "审核列表",
+          path: "/shlist",
+          icon: "ios-list-box-outline"
+        }
+      ]
     },
     {
       label: "接单员管理",

@@ -11,7 +11,7 @@
           class="upload-demo"
           name="files"
           ref="upload"
-          action="http://localhost:81/cisp/upload/file"
+          action="https://www.judgchen.cn/cisp/upload/file"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :on-success="handleSuccess"
@@ -23,7 +23,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="区域ID">
-        <el-input v-model="formData.aId" placeholder="区域ID（必填）"></el-input>
+        <el-input v-model="formData.aId" placeholder="区域ID（必填）" aria-required="true"></el-input>
       </el-form-item>
       <el-form-item label="广告公司">
         <el-input v-model="formData.company" placeholder="广告公司"></el-input>

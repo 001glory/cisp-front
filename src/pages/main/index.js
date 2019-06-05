@@ -97,6 +97,7 @@ let main = {
       // console.log(this.topNav)
       this.defaultMeun = this.topNav[0].path
       if (sessionStorage.getItem('dtype') == 2) {
+        this.topNav1 = nav.topNav1
         this.nav = nav.daili1
       } else {
         this.nav = nav.item1

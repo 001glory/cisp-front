@@ -1,15 +1,15 @@
 <template>
   <div>
     <el-card shadow="always" style="width:33.33%;display:inline-block">
-      <div>我的总收入</div>
+      <div>平台总收入</div>
       <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{msg.incomeTotal || 0}}</div>
     </el-card>
     <el-card shadow="always" style="width:33%;display:inline-block">
-      <div>账户余额</div>
+      <div>代理总收入</div>
       <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{(msg.incomeTotal-msg.cash) || 0}}</div>
     </el-card>
     <el-card shadow="always" style="width:33%;display:inline-block">
-      <div>已提现</div>
+      <div>接单员总收入</div>
       <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{msg.cash || 0}}</div>
     </el-card>
     <el-table
@@ -24,7 +24,7 @@
       <el-table-column prop="p_get" label="平台收益"></el-table-column>
       <el-table-column prop="a_get" label="代理收益"></el-table-column>
       <el-table-column prop="u_get" label="用户收益"></el-table-column>
-      <el-table-column prop="rate" label="收益率"></el-table-column>
+      <!--<el-table-column prop="rate" label="收益率"></el-table-column>-->
       <el-table-column prop="total_fee" label="单笔金额"></el-table-column>
     </el-table>
      <div class="panel-end">

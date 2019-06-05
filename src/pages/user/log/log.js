@@ -13,7 +13,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['操作人ID', '操作时间', '描述', 'API', 'CODE', '操作表'], ['uid', 'create_time', 'des', 'api_url', 'op_code', 'fi_table'])
+      searchList: this.yzy.initFilterSearch(['操作人ID', '操作时间'], ['uid', 'create_time'])
     }
   },
   mounted() {
@@ -28,15 +28,43 @@ let list = {
         query: row
       })
     },
-    getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
+    del() {
+      if (this.multipleSelection.length == 0) {
+        that.$message({
+          type: 'warning',
+          message: '您还没有选择任何一项'
+        })
+      } else {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = new URLSearchParams()
+          param.append("id",this.filterIds().toString())
+          that.axios.post('/api/log/delete',param).then((res)=> {
+            if (res.data.success) {
+              that.$message({
+                type: 'success',
+                message: "删除成功！"
+              })
+              that.getList()
+            } else {
+              that.$message({
+                type: 'error',
+                message: "系统错误！"
+              })
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       }
-
-      this.query.wheres = sq + ' is_delete=0 '
+    },
+    getList() {
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
@@ -53,7 +81,22 @@ let list = {
         }
       })
     },
+    getList1(param) {
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/log/like', param).then((res)=>{
+        if (res.data.success) {
 
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
     filterIds() {
       let arr = []
       for (let i in this.multipleSelection) {
@@ -66,14 +109,17 @@ let list = {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("uid",this.searchList[0].value)
+      }
+      if (this.searchList[1].value != '') {
+        param.append("createTime",this.searchList[1].value)
+      }
+      that.getList1(param)
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList = this.yzy.initFilterSearch(['操作人ID', '操作时间'], ['uid', 'create_time'])
       that.getList()
     },
     handleSelectionChange(val) {

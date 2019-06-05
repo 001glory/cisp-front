@@ -1,40 +1,27 @@
 <template>
   <div>
-    <!--<div class="panel-start">-->
-      <!--<el-input-->
-        <!--v-for="(item,index) in searchList"-->
-        <!--v-model="item.value"-->
-        <!--:placeholder="item.label"-->
-        <!--@blur="searchInput(index)"-->
-        <!--:key="index"-->
-        <!--class="filter-input"-->
-      <!--&gt;</el-input>-->
-      <!--<el-button-group>-->
-        <!--<el-button type="ghost" @click="clear()">清除</el-button>i-->
-        <!--<el-button type="primary" @click="search()">搜索</el-button>-->
-      <!--</el-button-group>-->
-    <!--</div>-->
+    <div class="panel-start">
+      <el-input
+        v-for="(item,index) in searchList"
+        v-model="item.value"
+        :placeholder="item.label"
+        @blur="searchInput(index)"
+        :key="index"
+        class="filter-input"
+      ></el-input>
+      <el-button-group>
+        <el-button type="ghost" @click="clear()">清除</el-button>i
+        <el-button type="primary" @click="search()">搜索</el-button>
+      </el-button-group>
+    </div>
 
     <div style="margin-top:15px">
       <div class="panel-between item-center">
         <el-button-group>
-          <!-- <el-button type="danger" plain icon="el-icon-delete"></el-button> -->
+           <el-button type="danger" plain icon="el-icon-delete" @click="del()"></el-button>
           <el-button type="success" plain @click="changeUserState('available')">启用用户</el-button>
           <el-button type="warning" plain @click="changeUserState('disable')">禁用用户</el-button>
         </el-button-group>
-        <!--<el-select-->
-          <!--v-model="query.pageSize"-->
-          <!--placeholder="请选择"-->
-          <!--style="width:150px"-->
-          <!--@change="handleSizeChange"-->
-        <!--&gt;-->
-          <!--<el-option-->
-            <!--v-for="item in pageSize"-->
-            <!--:key="item.label"-->
-            <!--:label="item.label"-->
-            <!--:value="item.value"-->
-          <!--&gt;</el-option>-->
-        <!--</el-select>-->
       </div>
     </div>
 

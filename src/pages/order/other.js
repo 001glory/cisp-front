@@ -19,7 +19,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['订单编号', '昵称', '手机号', '短号', '状态(1,2,3,4)'], ['order_num', 'nick_name', 'phone', 'dphone', 'state'])
+      searchList: this.yzy.initFilterSearch(['订单编号','手机号'], ['order_num', 'phone'])
     }
   },
   mounted() {
@@ -32,10 +32,10 @@ let list = {
       this.jdr = [global.tempJd.avatar_url, global.tempJd.name, global.tempJd.openid, global.tempJd.id]
     },
     wcclick(id) {
-      this.yzy.post('help/confirm', {
-        id: id,
-      }, function (res) {
-        if (res.code == 1) {
+      let param = new URLSearchParams()
+      param.append("id",id)
+      this.axios.post('/api/index/confirm', param).then((res)=>{
+        if (res.data.success) {
           that.$message({
             type: 'success',
             message: '操作成功'
@@ -44,7 +44,7 @@ let list = {
         } else {
           that.$message({
             type: 'error',
-            message: res.msg
+            message: "操作失败！"
           })
         }
       })
@@ -82,32 +82,90 @@ let list = {
     },
     //获取接单用户信息
     getJDUser() {
-      let server = global.dlserver;
-      let temp = '';
-      for (let i in server) {
-        if (server[i].server_name == '其他帮助') {
-          temp = server[i].jdr
+      let param = new URLSearchParams()
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post("/api/wx/get/com",param).then((res)=>{
+        if (res.data.success) {
+          let server = res.data.data.content
+          let temp = '';
+          for (let i in server) {
+            if (server[i].server_name == '其他帮助') {
+              temp = server[i].jdr
+            }
+            if (temp != '') {
+              this.jdr = temp
+            }
+          }
         }
-      }
-      if (temp != '') {
-        this.jdr = temp
+      })
+    },
+    del() {
+      if (this.multipleSelection.length == 0) {
+        that.$message({
+          type: 'warning',
+          message: '您还没有选择任何一项'
+        })
+      } else {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = new URLSearchParams()
+          param.append("id",this.filterIds().toString())
+          that.axios.post('/api/index/delete',param).then((res)=> {
+            if (res.data.success) {
+              that.$message({
+                type: 'success',
+                message: "删除成功！"
+              })
+              that.getList()
+            } else {
+              that.$message({
+                type: 'error',
+                message: "系统错误！"
+              })
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       }
     },
     getList() {
-      let t = this.query.wheres
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-
-      sq += ' title in ("校园跑腿","上门维修","代替服务","其他帮助") and state in (1,2,3,4) and helplist.is_delete=0 '
-      sq += sessionStorage.getItem('a_id') ? ' and a_id=' + sessionStorage.getItem('a_id') : ''
-      this.query.wheres = sq
+      // let t = this.query.wheres
+      // let sq = ''
+      // for (let i in this.wheres) {
+      //   if (this.wheres[i].value && this.wheres[i].value != '') {
+      //     sq += this.wheres[i].value + ' and '
+      //   }
+      // }
+      //
+      // sq += ' title in ("校园跑腿","上门维修","代替服务","其他帮助") and state in (1,2,3,4) and helplist.is_delete=0 '
+      // sq += sessionStorage.getItem('a_id') ? ' and a_id=' + sessionStorage.getItem('a_id') : ''
+      // this.query.wheres = sq
       let param = new URLSearchParams()
       param.append("aId",sessionStorage.getItem('a_id'))
       this.axios.post('/api/index/get', param).then((res)=> {
+        if (res.data.success) {
+
+          that.tableData = res.data.data
+          that.total = res.data.data.length
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
+    getList1(param) {
+      param.append("aId",sessionStorage.getItem('a_id'))
+      this.axios.post('/api/index/like2',param).then((res)=> {
         if (res.data.success) {
 
           that.tableData = res.data.data
@@ -181,7 +239,7 @@ let list = {
     filterIds() {
       let arr = []
       for (let i in this.multipleSelection) {
-        arr.push(this.multipleSelection[i].pk_id)
+        arr.push(this.multipleSelection[i].id)
       }
       return arr
     },
@@ -205,14 +263,17 @@ let list = {
       this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
     },
     search() {
-      that.getList()
+      let param = new URLSearchParams()
+      if (this.searchList[0].value != ''){
+        param.append("orderNum",this.searchList[0].value)
+      }
+      if (this.searchList[1].value != '') {
+        param.append("phone",this.searchList[1].value)
+      }
+      that.getList1(param)
     },
     clear() {
-      for (let i in this.wheres) {
-        if (this.wheres[i].label != 'user_state') {
-          this.wheres[i].value = ''
-        }
-      }
+      this.searchList = this.yzy.initFilterSearch(['订单编号','手机号'], ['orderNum', 'phone'])
       that.getList()
     },
     handleSelectionChange(val) {

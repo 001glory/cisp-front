@@ -47,8 +47,8 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="代理ID">
-        <el-input v-model="formData.dlId" placeholder="代理ID" :disabled="dtype != 1 "></el-input>
+      <el-form-item label="地区代码">
+        <el-input v-model="formData.dlId" placeholder="地区代码" :disabled="dtype != 1 "></el-input>
       </el-form-item>
       <el-form-item label="用户收益">
         <el-input
@@ -62,7 +62,7 @@
         <el-input v-model="formData.dlSy" type="number" placeholder="代理收益" :disabled="dtype != 1 "></el-input>
       </el-form-item>
       <el-form-item label="平台收益">
-        <el-input v-model="formData.pSy" type="number" placeholder="平台收益" :disabled="dtype != 1 "></el-input>
+        <el-input v-model="formData.psy" type="number" placeholder="平台收益" :disabled="dtype != 1 "></el-input>
       </el-form-item>
       <el-form-item
         label="标签"
@@ -89,8 +89,23 @@
       <el-form-item label="描述">
         <el-input v-model="formData.des" placeholder="描述"></el-input>
       </el-form-item>
+      <!--<el-form-item label="ICON">-->
+        <!--<el-input v-model="formData.icon" placeholder="ICON" :disabled="dtype != 1 "></el-input>-->
+      <!--</el-form-item>-->
       <el-form-item label="ICON">
-        <el-input v-model="formData.icon" placeholder="ICON" :disabled="dtype != 1 "></el-input>
+        <el-select
+          v-model="formData.icon"
+          placeholder="请选择"
+          style="width:100%"
+          :disabled="dtype != 1"
+        >
+          <el-option
+            v-for="item in icons"
+            :key="item.label"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="默认接单员">
         <el-button @click="dialogVisible = true">选择接单员</el-button>

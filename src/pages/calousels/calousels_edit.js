@@ -120,24 +120,28 @@ let list = {
       // this.centerDialogVisible = false;
     },
     handleSuccess(res,files,fileList){
-      console.log(files)
-      let params = new URLSearchParams()
-      this.fileUrl = files.response.data
-      params.append("fileUrl",this.fileUrl)
-      params.append("adminId",sessionStorage.getItem("uid"))
-      params.append("fileName",files.name)
-      params.append("fileSize",files.size)
-      params.append("mimetype",files.raw.type)
-      this.axios.post("/api/file/upload",params).then((response)=>{
+      if (files.response.data != '') {
+        let params = new URLSearchParams()
+        this.fileUrl = files.response.data
+        params.append("fileUrl",this.fileUrl)
+        params.append("adminId",sessionStorage.getItem("uid"))
+        params.append("fileName",files.name)
+        params.append("fileSize",files.size)
+        params.append("mimetype",files.raw.type)
+        this.axios.post("/api/file/upload",params).then((response)=>{
 
-        if (response.data.success) {
-          that.$message.success("上传成功！")
-        } else {
-          that.zs = true;
-        }
-      }).catch((error)=>{
-        console.log("sdsd")
-      })
+          if (response.data.success) {
+            that.$message.success("上传成功！")
+          } else {
+            that.zs = true;
+          }
+        }).catch((error)=>{
+          console.log("sdsd")
+        })
+      } else {
+        that.$message.error('文件没有上传！')
+      }
+
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -153,34 +157,41 @@ let list = {
       if (this.formData.params) {
         formData.path += '?' + formData.params
       }
-      let url = 'add'
-      let param = new URLSearchParams()
-      param.append("cover",this.fileUrl)
-      param.append("adminId",sessionStorage.getItem("uid"))
-      param.append("isShow",this.formData.isShow)
-      param.append("path",this.formData.path)
-      param.append("company",this.formData.company)
-      param.append("remark",this.formData.remark)
-      param.append("aId",this.formData.aId)
-      if (this.$route.query.id) {
-        url = 'update'
-        formData.id = this.formData.id
-      }
-      this.axios.post('/api/calousels/' + url, param).then((res)=>{
-        that.loading = false
-        if (res.data.success) {
-          that.$message.success("提交成功！")
-          if (that.$route.query.id) {
-            that.$router.go(-1)
-          } else {
-            that.formData = that.formData2
-          }
-
-        } else {
-          that.$message.error(res.data.message)
+      if (this.formData.path != ''&& this.formData.company != '' && this.formData.remark != '' && this.formData.aId != '' && this.formData.sort !=''){
+        let url = 'add'
+        let param = new URLSearchParams()
+        param.append("cover",this.fileUrl)
+        param.append("adminId",sessionStorage.getItem("uid"))
+        param.append("isShow",this.formData.isShow)
+        param.append("path",this.formData.path)
+        param.append("company",this.formData.company)
+        param.append("remark",this.formData.remark)
+        param.append("aId",this.formData.aId)
+        param.append("sort",this.formData.sort)
+        if (this.$route.query.id) {
+          url = 'update'
+          formData.id = this.formData.id
         }
-      })
+        this.axios.post('/api/calousels/' + url, param).then((res)=>{
+          that.loading = false
+          if (res.data.success) {
+            that.$message.success("提交成功！")
+            if (that.$route.query.id) {
+              that.$router.go(-1)
+            } else {
+              that.formData = that.formData2
+            }
+
+          } else {
+            that.$message.error(res.data.message)
+          }
+        })
+      } else {
+        that.$message.error('所有项都必填')
+        that.loading = false
+      }
     }
+
   }
 }
 module.exports = list

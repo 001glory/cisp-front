@@ -13,7 +13,7 @@
                     <el-input v-model.number="formData.username" placeholder="输入账号"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="checkPass">
-                    <el-input type="password" v-model="formData.password" placeholder="输入密码" autocomplete="off"></el-input>
+                    <el-input type="password" v-model="formData.password" placeholder="输入密码" autocomplete="off" show-password></el-input>
                 </el-form-item>
 
                 <el-form-item>
