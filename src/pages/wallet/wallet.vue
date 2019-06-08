@@ -1,16 +1,16 @@
 <template>
   <div>
-    <el-card shadow="always" style="width:33.33%;display:inline-block">
+    <el-card shadow="always" v-if="dtype==1" style="width:33.33%;display:inline-block">
       <div>平台总收入</div>
       <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{msg.incomeTotal || 0}}</div>
     </el-card>
     <el-card shadow="always" style="width:33%;display:inline-block">
       <div>代理总收入</div>
-      <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{(msg.incomeTotal-msg.cash) || 0}}</div>
+      <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{(msg.aGet) || 0}}</div>
     </el-card>
     <el-card shadow="always" style="width:33%;display:inline-block">
       <div>接单员总收入</div>
-      <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{msg.cash || 0}}</div>
+      <div class="ma-t20" style="font-size:30px"> <span class="fo-32">￥</span>{{msg.uGet || 0}}</div>
     </el-card>
     <el-table
       :data="tableData"

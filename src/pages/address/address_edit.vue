@@ -6,13 +6,13 @@
     style="width:400px;margin:auto;margin-top:50px"
   >
     <el-form-item label="分组ID">
-      <el-input v-model="formData.cate_id" placeholder="分组ID"></el-input>
+      <el-input v-model="formData.cateId" placeholder="分组ID"></el-input>
     </el-form-item>
     <el-form-item label="名称">
       <el-input v-model="formData.name" placeholder="地址名称"></el-input>
     </el-form-item>
     <el-form-item label="备注">
-      <el-input v-model="formData.sub_name" placeholder="备注"></el-input>
+      <el-input v-model="formData.subName" placeholder="备注"></el-input>
     </el-form-item>
     <el-form-item label="序号">
       <el-input v-model="formData.sort" placeholder="序号"></el-input>

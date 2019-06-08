@@ -102,7 +102,7 @@ let list = {
         if (res.data.success) {
           that.formData = res.data.data
           if (res.data.data.serverName == '快递代取' || res.data.data.serverName == '打印服务') {
-            that.price = res.data[0].priceGui.split(',')
+            that.price = res.data.data.priceGui.split(',')
           }
           // that.dynamicTags = res.data[0].tags.split(',') || []
         }

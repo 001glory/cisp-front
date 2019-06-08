@@ -13,7 +13,7 @@
       <el-input v-model="formData.sort" placeholder="序号"></el-input>
     </el-form-item>
     <el-form-item label="是否显示">
-      <el-switch v-model="is_show"></el-switch>
+      <el-switch v-model="isShow"></el-switch>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit" :loading="loading">确认提交</el-button>

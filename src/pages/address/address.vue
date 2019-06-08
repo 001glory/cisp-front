@@ -1,19 +1,5 @@
 <template>
   <div>
-    <div class="panel-start">
-      <el-input
-        v-for="(item,index) in searchList"
-        v-model="item.value"
-        :placeholder="item.label"
-        @blur="searchInput(index)"
-        :key="index"
-        class="filter-input"
-      ></el-input>
-      <el-button-group>
-        <el-button type="ghost" @click="clear()">清除</el-button>
-        <el-button type="primary" @click="search()">搜索</el-button>
-      </el-button-group>
-    </div>
 
     <div style="margin-top:15px">
       <div class="panel-between item-center">
@@ -47,9 +33,8 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="sort" label="序号"></el-table-column>
-      <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="cate_id" label="分组ID"></el-table-column>
+      <el-table-column prop="cateId" label="分组ID"></el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">

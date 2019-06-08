@@ -2,6 +2,7 @@ let that;
 let list = {
   data() {
     return {
+      dtype:0,
       multipleSelection: [],
       query: {
         wheres: '',
@@ -22,18 +23,28 @@ let list = {
   },
   methods: {
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-      this.query.wheres += ' phone not null '
-
       let param = new URLSearchParams()
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
       this.axios.post('/api/wx/user/get', param).then((res)=> {
+        if (res.data.success) {
+
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
+        } else {
+          that.$message({
+            type: 'error',
+            message: "系统错误！"
+          })
+        }
+      })
+    },
+    getAgentList() {
+      let param = new URLSearchParams()
+      param.append("aId",sessionStorage.getItem("a_id"))
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/wx/user/agent/get', param).then((res)=> {
         if (res.data.success) {
 
           that.tableData = res.data.data.content
@@ -148,31 +159,26 @@ let list = {
       })
     },
     searchInput(index) {
-      // this.wheres = this.yzy.filterSearch(this.searchList[index], this.wheres)
-      // for (let i in this.wheres) {
-      //
-      //   // console.log(this.wheres[i])
-      // }
-      // console.log(this.searchList[index])
-      // console.log(this.wheres)
     },
     search() {
       let param = new URLSearchParams()
-      if (this.searchList[0].value != ''){
-        param.append("id",this.searchList[0].value)
-      }
-      if (this.searchList[1].value != '') {
-        param.append("nickName",this.searchList[1].value)
-      }
-      if (this.searchList[2].value != '') {
-        param.append("phone",this.searchList[2].value)
-      }
-      if (this.searchList[3].value != '') {
-        param.append("gender", this.searchList[3].value)
-      }
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
-      that.getList1(param)
+      if (this.searchList[0].value != ''){
+        param.append("id",this.searchList[0].value)
+        that.getList1(param)
+      }else if (this.searchList[1].value != '') {
+        param.append("nickName",this.searchList[1].value)
+        that.getList1(param)
+      }else if (this.searchList[2].value != '') {
+        param.append("phone",this.searchList[2].value)
+        that.getList1(param)
+      }else if (this.searchList[3].value != '') {
+        param.append("gender", this.searchList[3].value)
+        that.getList1(param)
+      } else {
+        that.getList()
+      }
     },
     clear() {
       this.searchList=this.yzy.initFilterSearch(['ID', '昵称', '手机号',  '性别'], ['id', 'nickName', 'phone',  'gender'])

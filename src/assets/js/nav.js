@@ -221,25 +221,6 @@ const nav = {
       },]
     },
     {
-      label: "微信用户",
-      dtype: 2,
-      sub: [{
-        label: "用户列表",
-        path: "/wxuser_LIST",
-        icon: "ios-podium-outline"
-      }, {
-        label: "接单员列表",
-        path: "/jdlist",
-        icon: "ios-list-box-outline"
-      },
-        {
-          label: "审核列表",
-          path: "/shlist",
-          icon: "ios-list-box-outline"
-        }
-      ]
-    },
-    {
       label: "接单员管理",
       sub: [{
           label: "接单员列表",
@@ -297,22 +278,22 @@ const nav = {
       ]
     },
 
-    {
-      label: "设置",
-      sub: [{
-        label: "代理设置",
-        path: "/user/info",
-        icon: "ios-list-box-outline"
-      }]
-    },
-    {
-      label: "我的账户",
-      sub: [{
-        label: "我的账户",
-        path: "/wallet",
-        icon: "ios-list-box-outline"
-      }]
-    }
+    // {
+    //   label: "设置",
+    //   sub: [{
+    //     label: "代理设置",
+    //     path: "/user/info",
+    //     icon: "ios-list-box-outline"
+    //   }]
+    // },
+    // {
+    //   label: "我的账户",
+    //   sub: [{
+    //     label: "我的账户",
+    //     path: "/wallet",
+    //     icon: "ios-list-box-outline"
+    //   }]
+    // }
   ]
 };
 module.exports = nav;

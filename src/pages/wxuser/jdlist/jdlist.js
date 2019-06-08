@@ -2,6 +2,7 @@ let that;
 let list = {
   data() {
     return {
+      dtype:0,
       tempname:'',
       seevisable2:false,
       tempAid:'',
@@ -18,11 +19,12 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '昵称', '手机号'], ['id', 'nick_name', 'phone'])
+      searchList: this.yzy.initFilterSearch([ '昵称'], ['nick_name'])
     }
   },
   mounted() {
     that = this;
+    this.dtype = sessionStorage.getItem("dtype")
     that.getList()
   },
   methods: {
@@ -46,12 +48,6 @@ let list = {
       })
     },
     getList1(param) {
-      // let param = new URLSearchParams()
-      // param.append("page",this.query.pageIndex-1)
-      // param.append("size",this.query.pageSize)
-      // if(sessionStorage.getItem('dtype') == 2){
-      //   this.query.wheres += ' and userinfo.a_id='+sessionStorage.getItem('a_id')
-      // }
       this.axios.post('/api/wx/get/com1', param).then((res)=> {
         if (res.data.success) {
           that.tableData = res.data.data.content
@@ -154,21 +150,17 @@ let list = {
     },
     search() {
       let param = new URLSearchParams()
-      if (this.searchList[0].value != ''){
-        param.append("id",this.searchList[0].value)
-      }
-      if (this.searchList[1].value != '') {
-        param.append("nickName",this.searchList[1].value)
-      }
-      if (this.searchList[2].value != '') {
-        param.append("phone",this.searchList[2].value)
-      }
       param.append("page",this.query.pageIndex-1)
       param.append("size",this.query.pageSize)
-      that.getList1(param)
+      if (this.searchList[0].value != '') {
+        param.append("nickName",this.searchList[0].value)
+        that.getList1(param)
+      }else {
+        that.getList()
+      }
     },
     clear() {
-      this.searchList=this.yzy.initFilterSearch(['ID', '昵称', '手机号'], ['id', 'nick_name', 'phone'])
+      this.searchList=this.yzy.initFilterSearch([ '昵称'], ['nick_name'])
       that.getList()
     },
     handleSelectionChange(val) {

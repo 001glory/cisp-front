@@ -35,7 +35,7 @@
               <el-dropdown-item>
                 <div class="dropdown-item" @click="navTo('/updatepwd')">修改密码</div>
               </el-dropdown-item>
-              <el-dropdown-item v-if="dtype==1">
+              <el-dropdown-item >
                 <div class="dropdown-item" @click="navTo('/wallet')">我的账户</div>
               </el-dropdown-item>
               <el-dropdown-item>

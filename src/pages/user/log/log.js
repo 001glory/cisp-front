@@ -112,11 +112,14 @@ let list = {
       let param = new URLSearchParams()
       if (this.searchList[0].value != ''){
         param.append("uid",this.searchList[0].value)
-      }
-      if (this.searchList[1].value != '') {
+        that.getList1(param)
+      }else if (this.searchList[1].value != '') {
         param.append("createTime",this.searchList[1].value)
+        that.getList1(param)
+      } else {
+        that.getList()
       }
-      that.getList1(param)
+
     },
     clear() {
       this.searchList = this.yzy.initFilterSearch(['操作人ID', '操作时间'], ['uid', 'create_time'])

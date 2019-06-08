@@ -14,8 +14,8 @@ module.exports = {
        // 代理名称 可通过该代理名称来使用代理
   	  '/api': {
   	  	// API服务所在IP及端口号
-        // target:'https://www.judgchen.cn/cisp/',
-        target:'http://localhost:81/cisp//',
+        target:'https://www.judgchen.cn/cisp/',
+        // target:'http://localhost:81/cisp//',
         changeOrigin: true, //跨域
         pathRewrite: {
           '^/api': '/' 

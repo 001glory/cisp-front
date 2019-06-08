@@ -37,7 +37,7 @@ let list = {
     onSubmit() {
       this.loading = true
 
-      if (this.formData.username.length>=6 && this.formData.password ===this.formData.checkPwd){
+      if (this.formData.username.length>=4 && this.formData.password ===this.formData.checkPwd){
         let param = new URLSearchParams()
         param.append("username",this.formData.username)
         // param.append("pwd",this.formData.password)

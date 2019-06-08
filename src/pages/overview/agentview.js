@@ -36,16 +36,8 @@ let list = {
       height: 500,
       padding: [100, 20, 30, 45] // 上右下左
     });
-    // chart2 = new G2.Chart({
-    //   container: 'mountNode',
-    //   forceFit: true,
-    //   height:500,
-    //   padding: [100, 20, 30, 45]
-    // });
-    // this.pandu()
     this.getAnalysisData()
       this.sbchange()
-      // this.sbchange2()
   },
   methods: {
     sbchange() {
@@ -183,7 +175,9 @@ let list = {
     },
     getAnalysisData() {
 
-      this.axios.post("/api/analysis/getData").then(res=>{
+      let param = new URLSearchParams()
+      param.append("aId",sessionStorage.getItem("a_id"))
+      this.axios.post("/api/analysis/agent/getData",param).then(res=>{
         if (res.data.success) {
           that.msg = res.data.data
           that.initTotalData()

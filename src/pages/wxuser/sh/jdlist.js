@@ -20,7 +20,7 @@ let list = {
       pageSize: this.yzy.pageSize,
       total: 0,
       tableData: [],
-      searchList: this.yzy.initFilterSearch(['ID', '姓名'], ['id', 'nick_name'])
+      searchList: this.yzy.initFilterSearch(['姓名'], ['nick_name'])
     }
   },
   mounted() {
@@ -194,16 +194,15 @@ let list = {
     },
     search() {
       let param = new URLSearchParams()
-      if (this.searchList[0].value != ''){
-        param.append("id",this.searchList[0].value)
+     if (this.searchList[0].value != '') {
+        param.append("nickName",this.searchList[0].value)
+        that.getList1(param)
+      } else {
+        that.getList()
       }
-      if (this.searchList[1].value != '') {
-        param.append("nickName",this.searchList[1].value)
-      }
-      that.getList1(param)
     },
     clear() {
-      this.searchList=this.yzy.initFilterSearch(['ID', '姓名'], ['id', 'nick_name'])
+      this.searchList=this.yzy.initFilterSearch(['姓名'], ['nick_name'])
       that.getList()
     },
     handleSelectionChange(val) {

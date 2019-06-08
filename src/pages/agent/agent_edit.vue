@@ -23,7 +23,7 @@
       <el-input v-model="formData.a_id" placeholder="代理区域"></el-input>
     </el-form-item>
     <el-form-item label="手机号">
-      <el-input v-model="formData.phone" placeholder="手机号"></el-input>
+      <el-input v-model="formData.phone" placeholder="手机号" type="number" oninput="if(value.length>11) value=value.slice(0,11)"></el-input>
     </el-form-item>
     <el-form-item label="代理期限" v-if="formData.dtype == 2">
       <el-date-picker v-model="formData.deadline" style="width:100%" type="date" placeholder="选择日期"></el-date-picker>

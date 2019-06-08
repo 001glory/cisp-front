@@ -22,33 +22,40 @@ let list = {
   },
   methods: {
     del() {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        that.yzy.post('address/cate/del', {
-          ids: that.filterIds()
-        }, function (res) {
-          if (res.code == 1) {
-            that.$message({
-              type: 'success',
-              message: res.msg
-            })
-            that.getList()
-          } else {
-            that.$message({
-              type: 'error',
-              message: res.msg
-            })
-          }
+      if (this.multipleSelection.length == 0) {
+        that.$message({
+          type: 'warning',
+          message: '您还没有选择任何一项'
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
+      } else {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let param = new URLSearchParams()
+          param.append("id",this.filterIds().toString())
+          that.axios.post('/api/address/cate/delete',param).then((res)=> {
+            if (res.data.success) {
+              that.$message({
+                type: 'success',
+                message: "删除成功！"
+              })
+              that.getList()
+            } else {
+              that.$message({
+                type: 'error',
+                message: "系统错误！"
+              })
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
         });
-      });
+      }
     },
     navTo(path, row) {
       this.$router.push({
@@ -57,23 +64,18 @@ let list = {
       })
     },
     getList() {
-      let sq = ''
-      for (let i in this.wheres) {
-        if (this.wheres[i].value && this.wheres[i].value != '') {
-          sq += this.wheres[i].value + ' and '
-        }
-      }
-
-      this.query.wheres = sq + ' is_delete=0 and a_id=' + sessionStorage.getItem('a_id')
-      this.yzy.post('address/cate/get', this.query, function (res) {
-        if (res.code == 1) {
-
-          that.tableData = res.data.list
-          that.total = res.data.total
+      let param = new URLSearchParams()
+      param.append("aId",sessionStorage.getItem("a_id"))
+      param.append("page",this.query.pageIndex-1)
+      param.append("size",this.query.pageSize)
+      this.axios.post('/api/address/get/cate', param).then((res)=> {
+        if (res.data.success) {
+          that.tableData = res.data.data.content
+          that.total = res.data.data.totalElements
         } else {
           that.$message({
             type: 'error',
-            message: res.msg
+            message: "系统异常！"
           })
         }
       })

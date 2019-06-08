@@ -64,21 +64,6 @@ let list = {
           console.log(that.list)
         }
       })
-      // this.yzy.post('server/get/uid', {
-      //   uid: this.uid ? this.uid : sessionStorage.getItem('uid')
-      // }, function (res) {
-      //   if (res.code == 1) {
-      //     for (let i in res.data) {
-      //       if (res.data[i].jdr != '' && res.data[i].jdr != null) {
-      //         res.data[i].jdr = res.data[i].jdr.split(',')
-      //       } else {
-      //         res.data[i].jdr = []
-      //       }
-      //     }
-      //     that.list = res.data
-      //     global.dlserver = res.data
-      //   }
-      // })
     }
   }
 }
